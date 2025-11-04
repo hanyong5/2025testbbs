@@ -6,7 +6,7 @@ const BoardContext = createContext();
 export const useBoard = () => {
   const context = useContext(BoardContext);
   if (!context) {
-    throw new Error('useBoard must be used within a BoardProvider');
+    throw new Error('BoardProvider 안에 있어야 함');
   }
   return context;
 };
