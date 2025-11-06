@@ -8,6 +8,9 @@ function SignUpComp() {
     useremail: '',
     userpwd: '',
     userpwd1: '',
+    name: '',
+    phone: '',
+    text: '',
   });
 
   const [errorM, setErrorM] = useState('');
@@ -57,14 +60,36 @@ function SignUpComp() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: formData.useremail,
       password: formData.userpwd,
     });
 
+    console.log(data);
+
     if (!error) {
-      toast('회원가입완료');
-      setLoading(false);
+      console.log(data.user.id);
+
+      const { error } = await supabase
+        .from('user_table')
+        .insert([
+          {
+            id: data.user.id,
+            name: formData.name,
+            phone: formData.phone,
+            text: formData.text,
+          },
+        ])
+        .select();
+
+      if (!error) {
+        toast('회원가입완료');
+        setLoading(false);
+        navigate('/');
+      } else {
+        toast('가입안됨');
+        setLoading(false);
+      }
     } else {
       toast('가입안됨');
       setLoading(false);
@@ -126,6 +151,54 @@ function SignUpComp() {
               disabled={loading}
             />
           </div>
+          <hr />
+
+          <div>
+            <label htmlFor="name" className="label-control my-2">
+              이름{formData?.name}
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="이름을 입력하세요"
+              className="form-control"
+              onChange={eventHandler}
+              required
+              disabled={loading}
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="label-control my-2">
+              전화번호
+            </label>
+            <input
+              type="text"
+              name="phone"
+              id="phone"
+              placeholder="핸드폰번호를 입력하세요"
+              className="form-control"
+              onChange={eventHandler}
+              required
+              disabled={loading}
+            />
+          </div>
+          <div>
+            <label htmlFor="text" className="label-control my-2">
+              자기소개
+            </label>
+            <input
+              type="text"
+              name="text"
+              id="text"
+              placeholder="간단한소개 입력하세요"
+              className="form-control"
+              onChange={eventHandler}
+              required
+              disabled={loading}
+            />
+          </div>
+
           <div className="py-3 d-flex justify-content-between">
             <div>
               <Link to="/member/signin" className="nav-link">
