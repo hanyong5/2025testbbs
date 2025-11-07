@@ -46,6 +46,8 @@ function SignInComp() {
       setErrorM('');
     }
 
+    setLoading(true);
+
     //회원로그인
     const { error } = await signIn(formData.useremail, formData.userpwd);
 
