@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
         .from('user_table')
         .insert([
           {
-            id: data.user.id,
+            id: data.user.id, //uuid 32난수
             name: name,
             phone: phone,
             text: text,
