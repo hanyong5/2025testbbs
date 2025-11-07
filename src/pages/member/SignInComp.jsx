@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useUser } from '../../context/UserContext';
 
 function SignInComp() {
-  const { loading, setLoading } = useUser();
+  const { loading, setLoading, signIn } = useUser();
 
   const [formData, setFormData] = useState({
     useremail: '',
@@ -40,33 +40,25 @@ function SignInComp() {
     const message = vaildatation();
 
     if (message) {
-      //   setErrorM(message);
       toast(message);
-
       return;
     } else {
       setErrorM('');
     }
 
-    //회원가입
-    // const { error } = await signUp(
-    //   formData.useremail,
-    //   formData.userpwd,
-    //   formData.name,
-    //   formData.phone,
-    //   formData.text
-    // );
+    //회원로그인
+    const { error } = await signIn(formData.useremail, formData.userpwd);
 
-    // console.log(error);
-
-    // if (!error) {
-    //   toast('회원가입완료');
-    //   navigate('/member/signin');
-    //   setLoading(false);
-    // } else {
-    //   toast(error);
-    //   setLoading(false);
-    // }
+    console.log(error);
+    if (!error) {
+      toast('로그인완료');
+      navigate('/');
+      setLoading(false);
+    } else {
+      // toast('로그인에 실패 하였습니다.' + error);
+      toast('아이디와 패스워드를 확인하세요. 또는 회원가입하세요');
+      setLoading(false);
+    }
   };
 
   return (
