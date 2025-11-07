@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter, Link, NavLink, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomeComp from './pages/home/HomeComp';
@@ -9,14 +9,16 @@ import { ToastContainer } from 'react-toastify';
 import { useUser } from './context/UserContext';
 
 function App() {
-  const text = useUser();
+  const { signUp, text } = useUser();
+
   return (
     <BrowserRouter>
       <div className="container d-flex justify-content-between">
         <h1>
           <Link to="/" className="nav-link">
-            LOGO {text}
+            LOGO
           </Link>
+          <button onClick={signUp}>{text}</button>
         </h1>
         <ul className="d-flex gap-3 menu">
           <li className="d-flex align-items-center">

@@ -60,6 +60,7 @@ function SignUpComp() {
 
     setLoading(true);
 
+    //회원가입
     const { data, error } = await supabase.auth.signUp({
       email: formData.useremail,
       password: formData.userpwd,
