@@ -91,11 +91,16 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
   const value = {
     loading,
     user,
     signUp,
     signIn,
+    signOut,
     setLoading,
   };
 
