@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import supabase from '../utils/supabase';
 
 const UserContext = createContext();
@@ -13,6 +13,41 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const fetchUserInfo = async (userId) => {
+    const { data, error } = await supabase
+      .from('user_table')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) return null;
+    return data;
+  };
+
+  useEffect(() => {
+    console.log('session 준비');
+    const loadUser = async () => {
+      const { data } = await supabase.auth.getSession();
+
+      console.log(data);
+
+      const session = data?.session ?? null;
+
+      console.log(session?.user ?? null);
+      console.log(session?.user.id);
+
+      // 데이터를 입력
+      // setUser(session?.user ?? null);
+
+      if (session?.user) {
+        const extra = await fetchUserInfo(session?.user.id);
+        setUser({ ...session.user, ...extra });
+      }
+    };
+    loadUser();
+  }, [loading]);
 
   const signUp = async (email, password, name, phone, text) => {
     const { data, error } = await supabase.auth.signUp({
@@ -58,6 +93,7 @@ export const UserProvider = ({ children }) => {
 
   const value = {
     loading,
+    user,
     signUp,
     signIn,
     setLoading,

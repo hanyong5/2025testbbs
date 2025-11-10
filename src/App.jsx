@@ -9,7 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import { useUser } from './context/UserContext';
 
 function App() {
-  const { signUp, text } = useUser();
+  const { signUp, text, user } = useUser();
 
   return (
     <BrowserRouter>
@@ -44,9 +44,17 @@ function App() {
               member
             </NavLink>
           </li>
-          <li className="d-flex align-items-center">
-            <Link className="nav-link">로그아웃</Link>
-          </li>
+
+          {user && <> {user?.name} 님 안녕하세요!!!</>}
+          {!user && (
+            <>
+              <li className="d-flex align-items-center">
+                <Link className="nav-link" to="/memeber/signin">
+                  로그인
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       <Routes>
@@ -61,6 +69,7 @@ function App() {
           ratione?
         </div>
       </div>
+      {JSON.stringify(user)}
       <ToastContainer
         position="bottom-center"
         autoClose={2000}
