@@ -27,6 +27,7 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    let mounted = true;
     console.log('session 준비');
     const loadUser = async () => {
       const { data } = await supabase.auth.getSession();
@@ -45,9 +46,27 @@ export const UserProvider = ({ children }) => {
         const extra = await fetchUserInfo(session?.user.id);
         setUser({ ...session.user, ...extra });
       }
+
+      const { data: sub } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if (!mounted) return;
+
+          if (session?.user) {
+            const extra = await fetchUserInfo(session?.user.id);
+            setUser({ ...session.user, ...extra });
+          } else {
+            setUser(null);
+          }
+        }
+      );
+
+      return () => {
+        mounted = false;
+        sub?.subscription?.unsubscribe?.();
+      };
     };
     loadUser();
-  }, [loading]);
+  }, []);
 
   const signUp = async (email, password, name, phone, text) => {
     const { data, error } = await supabase.auth.signUp({
@@ -79,7 +98,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const signIn = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
