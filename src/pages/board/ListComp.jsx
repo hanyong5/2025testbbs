@@ -75,7 +75,57 @@ function ListComp() {
         ))}
       </ul> */}
       {/* 페이지네이션 */}
-      <div>페이지네이션</div>
+      <div className="d-flex flex-column flex-md-row justify-content-between mb-3">
+        <div className="mb-3">
+          총 {totalCount}개 / 현재 {page} 페이지 / 총 {totalPage}페이지
+        </div>
+        <div>
+          <ul className="pagination">
+            <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => {
+                  setPage((prev) => Math.max(prev - 1, 1));
+                  // setPage(page-1)
+                }}
+              >
+                이전
+              </button>
+            </li>
+
+            {/* 페이지네이션 bootstrap 디자인 */}
+            {pageNumbers.map((item, i) => {
+              return (
+                <li
+                  key={i}
+                  className={`page-item ${item == page ? 'active' : ''}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => {
+                      setPage(item);
+                    }}
+                  >
+                    {item}
+                  </button>
+                </li>
+              );
+            })}
+
+            <li className={`page-item ${page === totalPage ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => {
+                  // setPage(page+1)
+                  setPage((prev) => Math.min(page + 1, totalPage));
+                }}
+              >
+                다음
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <div className="d-flex justify-content-end">
         <div className="d-flex gap-2">
