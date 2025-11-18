@@ -7,18 +7,30 @@ import { useBoard } from '../../context/BoardContext';
 
 function ListComp() {
   const { posts, totalCount, getPostsWithPagination } = useBoard();
-  console.log('전체자료' + totalCount);
 
+  //페이지네이션 변수
   const [page, setPage] = useState(1);
   const size = 10;
+  const pagerCnt = 10;
+
+  //페이지네이션 계산
+  const totalPage = Math.ceil(totalCount / size);
+  const startPage = Math.floor((page - 1) / pagerCnt) * pagerCnt + 1;
+  const endPage = Math.min(startPage + pagerCnt - 1, totalPage);
+
+  //페이네이션 번호를 배열 생성
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
 
   useEffect(() => {
     getPostsWithPagination(page, size);
   }, [page]);
 
-  // if (!posts.length) {
-  //   return <p>게시물이 없습니다.</p>;
-  // }
+  if (!posts.length) {
+    return <p>게시물이 없습니다.</p>;
+  }
 
   return (
     <div>
@@ -62,6 +74,8 @@ function ListComp() {
           </li>
         ))}
       </ul> */}
+      {/* 페이지네이션 */}
+      <div>페이지네이션</div>
 
       <div className="d-flex justify-content-end">
         <div className="d-flex gap-2">
@@ -70,7 +84,7 @@ function ListComp() {
           </Link>
         </div>
       </div>
-      {JSON.stringify(posts)}
+      <div>{JSON.stringify(posts)}</div>
     </div>
   );
 }

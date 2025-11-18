@@ -26,10 +26,6 @@ export const BoardProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    getPosts();
-  }, []);
-
   const getPostsWithPagination = async (page = 1, size = 10) => {
     const from = (page - 1) * size; // 0 10 20
     const to = from + size - 1; // 9 19 29
@@ -47,7 +43,7 @@ export const BoardProvider = ({ children }) => {
     }
 
     // 페이지네이션 데이터조회
-    const { data, error } = supabase
+    const { data, error } = await supabase
       .from('posts')
       .select('*')
       .order('id', { ascending: false })
@@ -63,6 +59,10 @@ export const BoardProvider = ({ children }) => {
 
     return { data: [], totalCount: count, error };
   };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
 
   const value = {
     posts,
